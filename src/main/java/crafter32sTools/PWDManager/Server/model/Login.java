@@ -19,14 +19,14 @@ public class Login {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "last_date_of_change")
-    private LocalDateTime last_date_of_change;
+    @Column(name = "lastDateOfChange")
+    private LocalDateTime lastDateOfChange;
 
     @OneToMany(mappedBy = "login", orphanRemoval = true)
     private List<LoginParam> loginParams = new ArrayList<>();
 
-    public LocalDateTime getLast_date_of_change() {
-        return last_date_of_change;
+    public LocalDateTime getLastDateOfChange() {
+        return lastDateOfChange;
     }
 
     public UUID getId() {
@@ -88,7 +88,7 @@ public class Login {
             login.user = this.user;
             login.id = this.id;
             login.loginParams = this.loginParams;
-            login.last_date_of_change = this.last_date_of_change;
+            login.lastDateOfChange = this.last_date_of_change;
             return login;
         }
     }

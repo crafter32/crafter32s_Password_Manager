@@ -20,7 +20,7 @@ public class LoginService {
 
     public ResponseEntity<List<LoginDTO>> getCurrentLogins(UserDTO user){
         try{
-            return new ResponseEntity<>(LoginDTO.fromList(repository.getByUserOrderByLast_date_of_changeDesc(user.toUser())), HttpStatus.OK);
+            return new ResponseEntity<>(LoginDTO.fromList(repository.getByUserOrderByLastDateOfChangeDesc(user.toUser())), HttpStatus.OK);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

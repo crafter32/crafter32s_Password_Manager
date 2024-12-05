@@ -26,7 +26,7 @@ public record LoginDTO
     }
 
     public static LoginDTO fromLogin(Login login){
-        return new LoginDTO(login.getId(), UserDTO.fromUser(login.getUser()), login.getLoginParams(), login.getLast_date_of_change());
+        return new LoginDTO(login.getId(), UserDTO.fromUser(login.getUser()), login.getLoginParams(), login.getLastDateOfChange());
     }
 
     public static List<LoginDTO> fromList(List<Login> logins){
