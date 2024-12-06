@@ -8,11 +8,10 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "u_user")
-@EntityListeners(EncDecListener.class)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id")
     private UUID id;
 
     @Column(name = "user_name", nullable = false, unique = true)
@@ -68,7 +67,7 @@ public class User {
         private String userName;
         private String email;
         private String password;
-        private List<Login> logins;
+        private List<Login> logins = new ArrayList<>();
 
         private UserBuilder() {
         }
