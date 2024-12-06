@@ -10,17 +10,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import static crafter32sTools.PWDManager.Server.service.EncryptionHandler.decryptUser;
+import static crafter32sTools.PWDManager.Server.service.EncryptionHandler.encryptUser;
+
 @Service
 public class UserService {
     @Autowired
     private UserRepository repository;
-    @Autowired
-    private LoginService loginService;
 
-    public UserDTO getUserByEmailOrUsername(String EmailOrUsername){
+    public UserDTO getUserByEmailOrUsername(String EmailOrUsername) throws Exception {
         User res = repository.getByUserNameOrEmail(EmailOrUsername);
         if(res == null) throw new UserException("User not found!", HttpStatus.NOT_FOUND);
-        return UserDTO.fromUser(res);
+        return decryptUser(UserDTO.fromUser(res));
     }
 
     protected boolean UserEqualsUser(User user, User user2){
@@ -38,17 +39,5 @@ public class UserService {
         if(getUserByEmailOrUsername(userDTO.email()) != null) throw new UserException("An account is already linked to this email!", HttpStatus.IM_USED);
 
         return new ResponseEntity<>(UserDTO.fromUser(repository.save(encryptUser(userDTO).toUser())), HttpStatus.CREATED);
-    }
-
-    private UserDTO encryptUser(UserDTO userDTO) throws Exception {
-        UserDTO encrypted = userDTO;
-        if(encrypted.id() == null) encrypted = UserDTO.fromUser(repository.save(encrypted.toUser()));
-        return new UserDTO(
-                encrypted.id(),
-                EncryptionHandler.encrypt(encrypted.username(), encrypted.id().toString()),
-                EncryptionHandler.encrypt(encrypted.email(), encrypted.id().toString()),
-                EncryptionHandler.hashPassword(encrypted.password()),
-                encrypted.login()
-        );
     }
 }

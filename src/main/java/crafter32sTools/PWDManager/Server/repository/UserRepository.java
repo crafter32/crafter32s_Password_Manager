@@ -14,4 +14,7 @@ public interface UserRepository extends CrudRepository<User, UUID> {
     @Nullable
     User getByUserNameOrEmail(String userNameOrEmail);
 
+    @Query("select u from User u inner join u.logins logins where logins.id = ?1")
+    User findByLogins_Id(UUID id);
+
 }

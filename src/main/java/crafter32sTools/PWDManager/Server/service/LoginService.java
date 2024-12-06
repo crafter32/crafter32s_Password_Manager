@@ -3,6 +3,7 @@ package crafter32sTools.PWDManager.Server.service;
 import crafter32sTools.PWDManager.Server.DTO.LoginDTO;
 import crafter32sTools.PWDManager.Server.DTO.UserDTO;
 import crafter32sTools.PWDManager.Server.repository.LoginRepository;
+import crafter32sTools.PWDManager.Server.repository.UserRepository;
 import crafter32sTools.PWDManager.Server.service.Exceptions.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,8 @@ public class LoginService {
     private LoginRepository repository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
     public ResponseEntity<List<LoginDTO>> getCurrentLogins(UserDTO user){
         try{
@@ -30,7 +33,7 @@ public class LoginService {
         String body = "Login deleted successfully!";
         HttpStatus status = HttpStatus.OK;
         try{
-            if(!userService.UserEqualsUser(userDTO, login.userDTO())) throw new UserException("User does not own Login!", HttpStatus.UNAUTHORIZED);
+            if(!userService.UserEqualsUser(userDTO, UserDTO.fromUser(userRepository.findByLogins_Id(login.getId())))) throw new UserException("User does not own Login!", HttpStatus.UNAUTHORIZED);
             repository.delete(login.toLogin());
         }
         catch (UserException e){
@@ -40,8 +43,8 @@ public class LoginService {
         return new ResponseEntity<>(body, status);
     }
 
-    public ResponseEntity<LoginDTO> createLogin(LoginDTO loginDTO){
-        userService.getUserByEmailOrUsername(loginDTO.userDTO().username());
+    public ResponseEntity<LoginDTO> createLogin(LoginDTO loginDTO) throws Exception {
+        userService.getUserByEmailOrUsername(userRepository.findByLogins_Id(loginDTO.getId()).getUserName());
         return new ResponseEntity<>(LoginDTO.fromLogin(repository.save(loginDTO.toLogin())), HttpStatus.CREATED);
     }
 }

@@ -1,6 +1,7 @@
 package crafter32sTools.PWDManager.Server.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,10 +26,6 @@ public class Login {
     @OneToMany(mappedBy = "login", orphanRemoval = true)
     private List<LoginParam> loginParams = new ArrayList<>();
 
-    public LocalDateTime getLastDateOfChange() {
-        return lastDateOfChange;
-    }
-
     public UUID getId() {
         return id;
     }
@@ -37,12 +34,16 @@ public class Login {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public LocalDateTime getLastDateOfChange() {
+        return lastDateOfChange;
     }
 
     public List<LoginParam> getLoginParams() {
         return loginParams;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setLoginParams(List<LoginParam> loginParams) {
